@@ -1,0 +1,177 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--radius-2xl);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: var(--shadow-lg);
+  min-height: 240px;
+  transition: border-color var(--transition-normal),
+    transform var(--transition-normal), box-shadow var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.card[data-active="true"] {
+  transform: translateY(-4px) scale(1.01);
+  border-color: var(--color-focus);
+  box-shadow: var(--shadow-2xl);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-strong);
+  position: relative;
+  display: inline-block;
+}
+
+.helper {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  max-width: 18rem;
+  line-height: var(--line-height-normal);
+}
+
+.badge {
+  align-self: flex-start;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  background: var(--color-chip);
+  color: var(--color-chip-text);
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  box-shadow: var(--shadow-xs);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.badge[data-status="streaming"] {
+  background: rgba(var(--color-accent-rgb), 0.12);
+  color: var(--color-focus);
+  border-color: rgba(var(--color-accent-rgb), 0.22);
+}
+
+.badge[data-status="pending"] {
+  background: rgba(100, 116, 139, 0.12);
+  color: var(--color-text-muted);
+}
+
+.badge[data-status="ready"] {
+  background: rgba(var(--color-success-rgb), 0.12);
+  color: var(--color-success);
+  border-color: rgba(var(--color-success-rgb), 0.22);
+}
+
+.badge[data-status="canceled"] {
+  background: rgba(var(--color-warning-rgb), 0.12);
+  color: var(--color-warning);
+  border-color: rgba(var(--color-warning-rgb), 0.22);
+}
+
+.badge[data-status="error"] {
+  background: rgba(var(--color-error-rgb), 0.12);
+  color: var(--color-error);
+  border-color: rgba(var(--color-error-rgb), 0.22);
+}
+
+.body {
+  flex: 1;
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border-subtle);
+  position: relative;
+  z-index: 1;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.card[data-active="true"] .body {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.output {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: var(--line-height-relaxed);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+}
+
+.output.error {
+  color: var(--color-error);
+  font-weight: var(--font-weight-medium);
+}
+
+.placeholder {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: var(--space-3);
+  text-align: center;
+  min-height: 100px;
+}
+
+.placeholder[data-loading="true"]::before {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+  border-top-color: var(--color-accent);
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 700px) {
+  .card {
+    padding: var(--space-4);
+    min-height: 200px;
+  }
+
+  .body {
+    padding: var(--space-3);
+  }
+
+  .title {
+    font-size: var(--font-size-base);
+  }
+
+  .helper {
+    font-size: var(--font-size-xs);
+  }
+}

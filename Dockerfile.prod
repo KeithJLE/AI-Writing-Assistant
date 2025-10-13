@@ -1,0 +1,47 @@
+# Multi-stage Dockerfile for Production 
+# Stage 1: Build Frontend
+FROM node:24-bookworm-slim AS frontend-builder
+
+WORKDIR /app/frontend
+
+# Copy frontend package files
+COPY frontend/package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy frontend source
+COPY frontend/ ./
+
+# Build frontend for production
+RUN npm run build
+
+
+# Stage 2: Production Backend + Serve Frontend
+FROM python:3.13-slim-bookworm AS production
+
+WORKDIR /app
+
+# Copy backend requirements
+COPY backend/requirements.txt ./
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy backend application code
+COPY backend/ ./
+
+# Copy built frontend from stage 1
+COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
+
+# Set production environment variables
+ENV PYTHONUNBUFFERED=1
+ENV SERVE_FRONTEND=true
+ENV FRONTEND_DIR=frontend/dist
+ENV ENVIRONMENT=production
+
+# Expose port
+EXPOSE 8000
+
+# Run with production server
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]

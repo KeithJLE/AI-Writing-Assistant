@@ -1,0 +1,23 @@
+# Git
+.git
+.gitignore
+
+# Docker files
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Python
+__pycache__
+*.pyc
+
+# Node
+node_modules/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Build outputs
+frontend/dist/

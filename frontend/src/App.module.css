@@ -1,0 +1,84 @@
+.appShell {
+  min-height: 100vh;
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  transition: background 0.4s ease, color 0.2s ease;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.inner {
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-6) var(--space-16);
+  width: min(1200px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  position: relative;
+  z-index: 1;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  position: relative;
+}
+
+.heroHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.heroTitle {
+  margin: 0;
+  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--color-text-strong);
+  line-height: 1.1;
+  font-family: "Poppins", sans-serif;
+}
+
+.heroSubtitle {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-lg);
+  max-width: 640px;
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+}
+
+.heroAccent {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.panelCluster {
+  display: grid;
+  gap: var(--space-10);
+}
+
+.footer {
+  margin-top: var(--space-8);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: var(--space-4);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+@media (min-width: 900px) {
+  .panelCluster {
+    gap: var(--space-12);
+  }
+
+  .inner {
+    padding-left: var(--space-8);
+    padding-right: var(--space-8);
+  }
+}
