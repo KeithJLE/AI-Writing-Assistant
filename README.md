@@ -74,7 +74,7 @@ pip install -r requirements.txt
 
 5. **Run the backend**
 ```bash
-python main.py
+fastapi dev main.py
 ```
 
 Backend will be available at http://localhost:8000
