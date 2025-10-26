@@ -38,8 +38,8 @@ def generate_system_prompt(role: str, task: str) -> str:
     Generate a secure system prompt with guardrails.
 
     Args:
-        role: The role of the assistant
-        task: The task the assistant should perform
+        role: The role of the assistant. Will be fed in as "You are {role}."
+        task: The task the assistant should perform. Will be fed in as "Your function is {task}."
 
     Returns:
         Secure system prompt
