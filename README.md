@@ -15,7 +15,7 @@ A single page app that rephrases text into multiple writing styles using OpenAI'
 1. **Clone the repository**
 ```bash
 git clone <repository-url>
-cd rephraser
+cd AI-Writing-Assistant
 ```
 
 2. **Set your OpenAI API key**
