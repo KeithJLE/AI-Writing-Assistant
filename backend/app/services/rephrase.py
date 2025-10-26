@@ -2,16 +2,20 @@
 
 import uuid
 import json
-from typing import Dict, List, AsyncGenerator, Any
-
+from typing import Dict, List, AsyncGenerator, TypedDict, Literal
 from fastapi import Request
 
 from ..llm.openai_client import openai_client
 from ..security.output_validator import OutputValidator
 
-# Store active requests, maybe use something like Redis in prod
-active_requests: Dict[str, Dict[str, Any]] = {}
+class ActiveRequest(TypedDict):
+    """Represents an active in-memory rephrase request."""
+    text: str
+    styles: list[str]
+    status: Literal["created", "processing", "completed", "error"]
 
+# Store active requests, maybe use something like Redis in prod
+active_requests: Dict[str, ActiveRequest] = {}
 
 class RephraseService:
     """Service for handling text rephrasing requests."""
@@ -67,7 +71,7 @@ class RephraseService:
             # Update request status
             active_requests[request_id]["status"] = "processing"
 
-            # Process each style
+            # Process each style. We will open new connection to OpenAI for each style. In future, we could do all styles in one prompt, but will likely be tricky. Might have to build some kind of buffer that we add the deltas to in order to find delimiters. Since we are streaming, each delta might not be legible on its own, so need buffers. Even then, the delimiters might not be reliable as they could be valid rephrased output text.   
             for style in styles:
                 try:
                     # Stream from OpenAI with enhanced security
@@ -88,6 +92,7 @@ class RephraseService:
                             content = event.delta
 
                             # Validate output chunk for security
+                            # Note: Test this
                             if not self.output_validator.validate_output(
                                 content
                             ):
@@ -98,9 +103,9 @@ class RephraseService:
                                     "text": "Content blocked due to security concerns. Please try rephrasing your input.",
                                 }
                                 yield f"data: {json.dumps(error_event)}\n\n"
-                                print("errored")
-                                # Skip this chunk and continue
-                                continue
+                                openai_client.close_stream(request_id)
+                                print(f"Validation failed")
+                                break
 
                             # Send SSE event
                             event_data = {
@@ -110,7 +115,7 @@ class RephraseService:
                             }
                             yield f"data: {json.dumps(event_data)}\n\n"
 
-                    # Mark style as complete
+                    # Mark style as complete since we finished iterating over response_stream
                     complete_event = {"type": "complete", "style": style}
                     yield f"data: {json.dumps(complete_event)}\n\n"
 
@@ -134,6 +139,7 @@ class RephraseService:
 
         except Exception as e:
             print(f"Rephrase stream error: {str(e)}")
+            # To Do: Update frontend on global errors
             error_event = {"type": "error", "message": str(e)}
             yield f"data: {json.dumps(error_event)}\n\n"
 
