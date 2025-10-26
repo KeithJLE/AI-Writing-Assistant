@@ -1,7 +1,8 @@
 """OpenAI client wrapper."""
 
 from openai import OpenAI
-from typing import Iterator, Dict, Any
+from openai.types.responses.response_stream_event import ResponseStreamEvent
+from typing import Iterator, Dict
 
 from ..config import settings
 from ..security.secure_llm_pipeline import (
@@ -17,7 +18,7 @@ class OpenAIClient:
     def __init__(self):
         """Initialize OpenAI client with API key from settings."""
         self.client = OpenAI(api_key=settings.OPENAI_API_KEY)
-        self.active_streams: Dict[str, Any] = {}
+        self.active_streams: Dict[str, Iterator[ResponseStreamEvent]] = {}
         self.security_pipeline = SecureLLMPipeline()
 
     def create_completion_stream(
@@ -26,7 +27,7 @@ class OpenAIClient:
         prompt: str,
         style: str = "",
         model: str = "gpt-4o-mini",
-    ) -> Iterator[Any]:
+    ) -> Iterator[ResponseStreamEvent]:
         """
         Create a streaming completion using OpenAI API with security measures.
 
